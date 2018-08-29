@@ -118,7 +118,7 @@ abstract class Abstract_Settings {
 						$message = sprintf( __( '<strong>ERROR:</strong> Invalid data in the field <em>%s</em>.', 'kntnt-personalized-content' ), $fields[ $id ]['label'] );
 					}
 					else {
-						$message = __( '<strong>ERROR:</strong>strong> Please review the settings and try again.', 'kntnt-personalized-content' );
+						$message = __( '<strong>ERROR:</strong> Please review the settings and try again.', 'kntnt-personalized-content' );
 					}
 					$this->notify_admin( $message, 'error' );
 					$validates = false;
