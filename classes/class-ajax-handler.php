@@ -20,10 +20,8 @@ class Ajax_Handler {
 		// Check that nonce is valid. Die if not.
 		check_ajax_referer( 'kntnt-personalized-content-nonce', 'nonce' );
 
-		error_log( print_r( $_POST, true ) ); // TODO: TAG BORT!!!
-
 		// Get the profile.
-		$profile = $_POST['profile'] ? $_POST['profile'] : []; // TODO: Är $_POST['profile'] en array???
+		$profile = $_POST['profile'] ? $_POST['profile'] : [];
 
 		/**
 		 * Filters the HTML-code of the personalized content before it is
