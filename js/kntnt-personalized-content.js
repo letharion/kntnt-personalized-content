@@ -6,7 +6,7 @@ let kntntCIP = new class {
     }
 
     set cipURL(cipURL) {
-        if ( this._cipURL !== cipURL ) {
+        if (this._cipURL !== cipURL) {
             this._profile = null;
         }
         this._cipURL = cipURL;
@@ -43,15 +43,20 @@ jQuery(document).ready(function ($) {
 
     $(kntnt_personalized_content.selector).each(function (index, element) {
 
-        let $element = $(element);
+        const $element = $(element);
 
         kntntCIP.cipURL = kntnt_personalized_content.cip_url;
 
-        let data = {
+        let attributes = {};
+        for (let i = 0; i < element.attributes.length; ++i) {
+            attributes[element.attributes[i].name] = element.attributes[i].value;
+        }
+
+        const data = {
             'action': kntnt_personalized_content.action,
             'nonce': kntnt_personalized_content.nonce,
             'profile': kntntCIP.profile,
-            'attributes': $element.attributes
+            'attributes': attributes
         };
 
         jQuery.post(kntnt_personalized_content.ajax_url, data, function (content) {
