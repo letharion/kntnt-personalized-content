@@ -19,7 +19,18 @@ filtered. Default is an empty string. The second argument is the visitors
 profile returned by the CIP (see requirements). The profile is arranged as
 an associative array with taxonomies as keys and indexed arrays of terms as
 value. The third argument is an associative array of the container element's
-attributes (e.g. id and class). 
+attributes (e.g. id and class).
+
+When WordPress runs in debug mode, i.e. WP_DEBUG is defined and true, the
+plugin looks for the cookie `kntnt-personalized-content-profile`. If it exists
+and is non-empty, its value is used as profile instead of fetching it from CIP.
+By creating bookmarklets for various profiles, you can test their effect on
+the personalized content. Following links are the trivial bookmarklets for
+[an unknown user][unknown] (i.e. we haven't enough data to make a profile) and for
+[restoring normal operations][restore].
+
+[unknown]: javascript:%28function%28%29%7Bdocument.cookie%3D%27kntnt-personalized-content-profile%3D%7B%7D%3Bpath%3D%2F%27%3B%7D%29%28%29%3B
+[restore]: javascript:%28function%28%29%7Bdocument.cookie%3D%27kntnt-personalized-content-profile%3D%3Bexpires%3DThu%2C01-Jan-197000%3A00%3A01GMT%3Bpath%3D%2F%27%3B%7D%29%28%29%3B
 
 ## Requirements
 
@@ -30,7 +41,7 @@ Currently, CIP is only available for Kntnt's customers.
 
 ## Installation
 
-Install the plugin [the usually way](https://codex.wordpress.org/Managing_Plugins#Installing_Plugins). 
+Install the plugin [the usually way](https://codex.wordpress.org/Managing_Plugins#Installing_Plugins).
 
 ## Frequently Asked Questions
 

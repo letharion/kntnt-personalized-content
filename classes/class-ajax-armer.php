@@ -40,6 +40,7 @@ class Ajax_Armer {
 			'selector' => $selector,
 			'action' => $this->ns,
 			'nonce' => wp_create_nonce( 'kntnt-personalized-content-nonce' ),
+			'debug' => defined( 'WP_DEBUG' ) && 'WP_DEBUG',
 		] );
 
 	}
