@@ -39,7 +39,7 @@
 							<?php case 'select multiple': ?>
                                 <select id="<?php echo $id ?>" name="<?php echo "{$ns}[$id][]" ?>" multiple>
 									<?php foreach ( $field['options'] as $value => $item ): ?>
-                                        <option value="<?php echo $value; ?>" <?php echo in_array( $value, $values[ $id ] ) ? 'selected' : ''; ?>><?php echo $item; ?></option>
+                                        <option value="<?php echo $value; ?>" <?php echo isset( $values[ $id ] ) && in_array( $value, $values[ $id ] ) ? 'selected' : ''; ?>><?php echo $item; ?></option>
 									<?php endforeach; ?>
                                 </select>
                                 <br>

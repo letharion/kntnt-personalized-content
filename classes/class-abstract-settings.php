@@ -97,8 +97,8 @@ abstract class Abstract_Settings {
 		foreach ( $fields as $id => $field ) {
 
 			// Set default if no value is saved.
-			if ( ! isset( $values[ $id ] ) && isset( $field['default'] ) ) {
-				$values[ $id ] = $field['default'];
+			if ( ! isset( $values[ $id ] ) ) {
+				$values[ $id ] = isset( $field['default'] ) ? $field['default'] : null;
 			}
 
 			// Filter saved value before outputting it.
@@ -121,18 +121,22 @@ abstract class Abstract_Settings {
 
 		$fields = $this->fields();
 
-		$validates = true;
-
 		// Validate inputted values.
-		foreach ( $opt as $id => &$val ) {
-			if ( isset( $fields[ $id ]['validate'] ) ) {
-				$validator = $fields[ $id ]['validate'];
-				if ( ! $validator( $val ) ) {
-					if ( isset( $fields[ $id ]['validate-error-message'] ) ) {
-						$message = $fields[ $id ]['validate-error-message'];
+		$validates = true;
+		foreach ( $fields as $id => $field ) {
+
+			// Some fields (e.g. select multiple) are left out in $opt if
+			// nothing is set. Add them and set heir value to null.
+			if ( ! isset( $opt[ $id ] ) ) $opt[ $id ] = null;
+
+			if ( isset( $field['validate'] ) ) {
+				$validator = $field['validate'];
+				if ( ! $validator( $opt[ $id ] ) ) {
+					if ( isset( $field['validate-error-message'] ) ) {
+						$message = $field['validate-error-message'];
 					}
-					else if ( $fields[ $id ]['label'] ) {
-						$message = sprintf( __( '<strong>ERROR:</strong> Invalid data in the field <em>%s</em>.', 'kntnt-personalized-content' ), $fields[ $id ]['label'] );
+					else if ( $field['label'] ) {
+						$message = sprintf( __( '<strong>ERROR:</strong> Invalid data in the field <em>%s</em>.', 'kntnt-personalized-content' ), $field['label'] );
 					}
 					else {
 						$message = __( '<strong>ERROR:</strong> Please review the settings and try again.', 'kntnt-personalized-content' );
@@ -146,14 +150,17 @@ abstract class Abstract_Settings {
 		if ( $validates ) {
 
 			// Filter inputted values.
-			foreach ( $opt as $id => &$val ) {
-				if ( isset( $fields[ $id ]['filter-after'] ) ) {
-					$filter = $fields[ $id ]['filter-after'];
-					$opt[ $id ] = $filter( $val );
+			foreach ( $fields as $id => $field ) {
+				if ( isset( $field['filter-after'] ) ) {
+					$filter = $field['filter-after'];
+					$opt[ $id ] = $filter( $opt [ $id ] );
 				}
 			}
 
+			// Save inputted values.
 			update_option( $this->ns, $opt );
+
+			// Success notification
 			if ( isset( $fields[ $id ]['validate-success-message'] ) ) {
 				$message = $fields[ $id ]['validate-success-message'];
 			}
