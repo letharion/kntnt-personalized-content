@@ -4,18 +4,35 @@ namespace Kntnt\Personalized_Content;
 
 abstract class Abstract_Settings {
 
+	private $ns;
+
+	public function __construct() {
+		$this->ns = Plugin::ns();
+	}
+
 	/**
 	 * Bootstrap instance of this class.
 	 */
 	public function run() {
 		add_action( 'admin_menu', [ $this, 'add_options_page' ] );
+		add_filter( "plugin_action_links_$this->ns/$this->ns.php", [ $this, 'add_plugin_action_links' ], 10, 2 );
 	}
 
 	/**
 	 * Add settings page to the option menu.
 	 */
 	public function add_options_page() {
-		add_options_page( $this->page_title(), $this->menu_title(), $this->capability(), Plugin::ns(), [ $this, 'show_settings_page' ] );
+		add_options_page( $this->page_title(), $this->menu_title(), $this->capability(), $this->ns, [ $this, 'show_settings_page' ] );
+	}
+
+	/**
+	 * Returns $links with a link to this setting page added.
+	 */
+	public function add_plugin_action_links( $actions ) {
+		$settings_link_name = __( 'Settings', 'kntnt-personalized-content' );
+		$settings_link_url = admin_url( "options-general.php?page={$this->ns}" );
+		$actions[] = "<a href=\"$settings_link_url\">$settings_link_name</a>";
+		return $actions;
 	}
 
 	/**
@@ -54,24 +71,24 @@ abstract class Abstract_Settings {
 
 		// Abort if current user has not permission to access the settings page.
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( __( 'Unauthorized use.', 'kntnt-taxonomy-meta-tag' ) );
+			wp_die( __( 'Unauthorized use.', 'kntnt-personalized-content' ) );
 		}
 
 		// Update options if the page is shown after a form post.
-		if ( isset( $_POST[ Plugin::ns() ] ) ) {
+		if ( isset( $_POST[ $this->ns ] ) ) {
 
 			// Abort if the form's nonce is not correct or expired.
-			if ( ! wp_verify_nonce( $_POST['_wpnonce'], Plugin::ns() ) ) {
-				wp_die( __( 'Nonce failed.', 'kntnt-taxonomy-meta-tag' ) );
+			if ( ! wp_verify_nonce( $_POST['_wpnonce'], $this->ns ) ) {
+				wp_die( __( 'Nonce failed.', 'kntnt-personalized-content' ) );
 			}
 
 			// Update options.
-			$this->update_options( $_POST[ Plugin::ns() ] );
+			$this->update_options( $_POST[ $this->ns ] );
 
 		}
 
 		// Variables that will be visible for the settings-page template.
-		$ns = Plugin::ns();
+		$ns = $this->ns;
 		$title = $this->page_title();
 		$fields = $this->fields();
 		$values = Plugin::option();
@@ -136,7 +153,7 @@ abstract class Abstract_Settings {
 				}
 			}
 
-			update_option( Plugin::ns(), $opt );
+			update_option( $this->ns, $opt );
 			if ( isset( $fields[ $id ]['validate-success-message'] ) ) {
 				$message = $fields[ $id ]['validate-success-message'];
 			}
@@ -149,8 +166,8 @@ abstract class Abstract_Settings {
 
 	}
 
-	private function notify_admin($message, $type) {
+	private function notify_admin( $message, $type ) {
 		echo "<div class=\"notice notice-$type is-dismissible\"><p>$message</p></div>";
 	}
-	
+
 }
