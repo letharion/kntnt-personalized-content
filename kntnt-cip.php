@@ -2,19 +2,19 @@
 
 /**
  * @wordpress-plugin
- * Plugin Name:       Kntnt's Personalized Content
- * Plugin URI:        https://github.com/Kntnt/kntnt-bb-personalized-posts
- * Description:       Provides hooks that allows developers to inject personalized content.
+ * Plugin Name:       Kntnt's Content Intelligence Platform
+ * Plugin URI:        https://github.com/Kntnt/kntnt-cip
+ * Description:       Integrates WordPress with Kntnt's Content Intelligence Platform.
  * Version:           1.0.0
  * Author:            Thomas Barregren
  * Author URI:        https://www.kntnt.com/
  * License:           GPL-3.0+
  * License URI:       http://www.gnu.org/licenses/gpl-3.0.txt
- * Text Domain:       kntnt-personalized-content
+ * Text Domain:       kntnt-cip
  * Domain Path:       /languages
  */
 
-namespace Kntnt\Personalized_Content;
+namespace Kntnt\CIP;
 
 defined( 'WPINC' ) || die;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Kntnt\Personalized_Content;
+namespace Kntnt\CIP;
 
 abstract class Abstract_Settings {
 
@@ -29,7 +29,7 @@ abstract class Abstract_Settings {
 	 * Returns $links with a link to this setting page added.
 	 */
 	public function add_plugin_action_links( $actions ) {
-		$settings_link_name = __( 'Settings', 'kntnt-personalized-content' );
+		$settings_link_name = __( 'Settings', 'kntnt-cip' );
 		$settings_link_url = admin_url( "options-general.php?page={$this->ns}" );
 		$actions[] = "<a href=\"$settings_link_url\">$settings_link_name</a>";
 		return $actions;
@@ -71,7 +71,7 @@ abstract class Abstract_Settings {
 
 		// Abort if current user has not permission to access the settings page.
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( __( 'Unauthorized use.', 'kntnt-personalized-content' ) );
+			wp_die( __( 'Unauthorized use.', 'kntnt-cip' ) );
 		}
 
 		// Update options if the page is shown after a form post.
@@ -79,7 +79,7 @@ abstract class Abstract_Settings {
 
 			// Abort if the form's nonce is not correct or expired.
 			if ( ! wp_verify_nonce( $_POST['_wpnonce'], $this->ns ) ) {
-				wp_die( __( 'Nonce failed.', 'kntnt-personalized-content' ) );
+				wp_die( __( 'Nonce failed.', 'kntnt-cip' ) );
 			}
 
 			// Update options.
@@ -115,6 +115,83 @@ abstract class Abstract_Settings {
 	}
 
 	/**
+	 * Validates that $integer is either empty or an integer.
+	 *
+	 * @param $integer The value to validate.
+	 *
+	 * @return bool True if and only if $integer is either an empty scalar (e.g.
+	 * an empty string but not an empty array) or an integer.
+	 */
+	protected function validate_integer( $integer ) {
+		return empty( $integer ) || ! is_numeric( $integer ) && ( ( (int) $integer ) === $integer ); // is_int don't handle strings
+	}
+
+	/**
+	 * Validates that $number is either empty or a number.
+	 *
+	 * @param $number The value to validate.
+	 *
+	 * @return bool True if and only if $number is either an empty scalar (e.g.
+	 * an empty string but not an empty array) or an integer or floating point
+	 * number.
+	 */
+	protected function validate_number( $number ) {
+		return empty( $number ) || is_numeric( $number );
+	}
+
+	/**
+	 * Validates that $val is an URL.
+	 *
+	 * @param $url The value to validate.
+	 *
+	 * @return bool True if and only if $url is a proper formatted URL.
+	 */
+	protected function validate_url( $url ) {
+		return false !== filter_var( $url, FILTER_VALIDATE_URL );
+	}
+
+	/**
+	 * Validates that $email is an email address.
+	 *
+	 * @param $email The value to validate.
+	 *
+	 * @return bool True if and only if $email is a proper formatted email
+	 * address.
+	 */
+	protected function validate_email( $email ) {
+		return false !== filter_var( $email, FILTER_VALIDATE_EMAIL );
+	}
+
+	/**
+	 * Validates that the value(s) in $values match the options in $options.
+	 *
+	 * @param       $val        Either a value or an array of values to
+	 *                          validate.
+	 * @param array $options    An associative array where the keys are allowed
+	 *                          values of $val.
+	 *
+	 * @return bool True if and only if a single value in $value match an option
+	 *              in $option or if all values in an array $values of values
+	 *              match an option in $option.
+	 */
+	protected function validate_options( $val, $options ) {
+		if ( ! is_array( $val ) ) {
+			if ( ! empty( $val ) && ! array_key_exists( $val, $options ) ) {
+				return false;
+			}
+		}
+		else {
+			foreach ( $val as $key => $value ) {
+				if ( ! array_key_exists( $key, $options ) ) {
+					return false;
+				}
+			}
+
+		}
+		return true;
+	}
+
+	/**
 	 * Validate, sanitize and save field values.
 	 */
 	private function update_options( $opt ) {
@@ -126,25 +203,44 @@ abstract class Abstract_Settings {
 		foreach ( $fields as $id => $field ) {
 
 			// Some fields (e.g. select multiple) are left out in $opt if
-			// nothing is set. Add them and set heir value to null.
+			// nothing is set. Add them and set their value to null.
 			if ( ! isset( $opt[ $id ] ) ) $opt[ $id ] = null;
 
-			if ( isset( $field['validate'] ) ) {
-				$validator = $field['validate'];
-				if ( ! $validator( $opt[ $id ] ) ) {
-					if ( isset( $field['validate-error-message'] ) ) {
-						$message = $field['validate-error-message'];
-					}
-					else if ( $field['label'] ) {
-						$message = sprintf( __( '<strong>ERROR:</strong> Invalid data in the field <em>%s</em>.', 'kntnt-personalized-content' ), $field['label'] );
-					}
-					else {
-						$message = __( '<strong>ERROR:</strong> Please review the settings and try again.', 'kntnt-personalized-content' );
-					}
-					$this->notify_admin( $message, 'error' );
+			// Select multiple needs special treatment to be consistent with
+			// other fields having options.
+			if ( 'select multiple' == $field['type'] ) {
+				$opt[ $id ] = array_combine( $opt[ $id ], $opt[ $id ] );
+			}
+
+			// Validate fields for which there exists pre-defined baseline
+			// validators. More sophisticated validation can be defined in
+			// the field settings.
+			$validator = 'validate_' . $field['type'];
+			if ( method_exists( $this, $validator ) ) {
+				if ( ! $this->$validator( $opt[ $id ] ) ) {
 					$validates = false;
+					$this->notify_error( $field );
 				}
 			}
+
+			// Validate fields with pre-defined options.
+			if ( isset( $field['options'] ) ) {
+				if ( ! $this->validate_options( $opt[ $id ], $field['options'] ) ) {
+					$validates = false;
+					$this->notify_error( $field );
+				}
+			}
+
+			if ( isset( $field['validate'] ) ) {
+
+				$validator = $field['validate'];
+				if ( ! $validator( $opt[ $id ] ) ) {
+					$validates = false;
+					$this->notify_error( $field );
+				}
+
+			}
+
 		}
 
 		if ( $validates ) {
@@ -161,16 +257,28 @@ abstract class Abstract_Settings {
 			update_option( $this->ns, $opt );
 
 			// Success notification
-			if ( isset( $fields[ $id ]['validate-success-message'] ) ) {
-				$message = $fields[ $id ]['validate-success-message'];
-			}
-			else {
-				$message = __( 'Successfully saved settings.', 'kntnt-personalized-content' );
-			}
-			$this->notify_admin( $message, 'success' );
+			$this->notify_success();
 
 		}
 
+	}
+
+	private function notify_error( $field ) {
+		if ( isset( $field['validate-error-message'] ) ) {
+			$message = $field['validate-error-message'];
+		}
+		else if ( $field['label'] ) {
+			$message = sprintf( __( '<strong>ERROR:</strong> Invalid data in the field <em>%s</em>.', 'kntnt-cip' ), $field['label'] );
+		}
+		else {
+			$message = __( '<strong>ERROR:</strong> Please review the settings and try again.', 'kntnt-cip' );
+		}
+		$this->notify_admin( $message, 'error' );
+	}
+
+	private function notify_success() {
+		$message = __( 'Successfully saved settings.', 'kntnt-cip' );
+		$this->notify_admin( $message, 'success' );
 	}
 
 	private function notify_admin( $message, $type ) {

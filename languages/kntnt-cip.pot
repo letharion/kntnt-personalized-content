@@ -1,0 +1,61 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Kntnt's Content Intelligence Platform\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-09-05 20:01+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/"
+
+#: classes/class-abstract-settings.php:271
+#, php-format
+msgid "<strong>ERROR:</strong> Invalid data in the field <em>%s</em>."
+msgstr ""
+
+#: classes/class-abstract-settings.php:274
+msgid "<strong>ERROR:</strong> Please review the settings and try again."
+msgstr ""
+
+#: classes/class-settings.php:30
+msgid "CIP URL"
+msgstr ""
+
+#. Description of the plugin
+msgid "Integrates WordPress with Kntnt's Content Intelligence Platform."
+msgstr ""
+
+#: classes/class-settings.php:13
+msgid "KNTNT CIP"
+msgstr ""
+
+#. Name of the plugin
+#: classes/class-settings.php:20
+msgid "Kntnt's Content Intelligence Platform"
+msgstr ""
+
+#: classes/class-abstract-settings.php:82
+msgid "Nonce failed."
+msgstr ""
+
+#: classes/class-abstract-settings.php:32
+msgid "Settings"
+msgstr ""
+
+#: classes/class-abstract-settings.php:280
+msgid "Successfully saved settings."
+msgstr ""
+
+#: classes/class-abstract-settings.php:74
+msgid "Unauthorized use."
+msgstr ""
+
+#: classes/class-settings.php:31
+msgid "URL to the front page of Content Intelligence Platform by Kntnt"
+msgstr ""

@@ -21,7 +21,7 @@ let kntntCIP = new class {
 
     loadProfile() {
         let cookie;
-        if (kntnt_personalized_content.debug && (cookie = this._getCookie('kntnt-personalized-content-profile'))) {
+        if (kntnt_cip.debug && (cookie = this._getCookie('kntnt-cip-profile'))) {
             this._profile = JSON.parse(cookie)
         }
         else if (null === this._cipURL) {
@@ -32,11 +32,11 @@ let kntntCIP = new class {
         }
     }
 
-    // TODO CLAES: Contact CIP at this.url to load this.profile
     _loadProfile() {
+        // TODO CLAES: Contact CIP at this.url to load this.profile
         return {
-            'strategy_interest': ['business_managers'],
-            'strategy_step': ['unaware', 'experiencing'],
+            'strategy_interest': [],
+            'strategy_step': [],
             'strategy_personality': []
         };
     }
@@ -50,11 +50,11 @@ let kntntCIP = new class {
 
 jQuery(document).ready(function ($) {
 
-    $(kntnt_personalized_content.selector).each(function (index, element) {
+    $(kntnt_cip.selector).each(function (index, element) {
 
         const $element = $(element);
 
-        kntntCIP.url = kntnt_personalized_content.cip_url;
+        kntntCIP.url = kntnt_cip.cip_url;
 
         let attributes = {};
         for (let i = 0; i < element.attributes.length; ++i) {
@@ -62,13 +62,13 @@ jQuery(document).ready(function ($) {
         }
 
         const data = {
-            'action': kntnt_personalized_content.action,
-            'nonce': kntnt_personalized_content.nonce,
+            'action': kntnt_cip.action,
+            'nonce': kntnt_cip.nonce,
             'profile': kntntCIP.profile,
             'attributes': attributes
         };
 
-        jQuery.post(kntnt_personalized_content.ajax_url, data, function (content) {
+        jQuery.post(kntnt_cip.ajax_url, data, function (content) {
             $element.html(content);
             $element.show();
             $(document.body).trigger('post-load');

@@ -2,6 +2,6 @@
 
 defined( 'WPINC' ) || die;
 
-add_option( 'kntnt-personalized-content', [
-	'cip_url' => '',
+add_option( 'kntnt-cip', [
+	'layout_post_id' => '',
 ] );

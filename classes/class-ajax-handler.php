@@ -1,6 +1,6 @@
 <?php
 
-namespace Kntnt\Personalized_Content;
+namespace Kntnt\CIP;
 
 class Ajax_Handler {
 
@@ -18,7 +18,7 @@ class Ajax_Handler {
 	public function ajax_action() {
 
 		// Check that nonce is valid. Die if not.
-		check_ajax_referer( 'kntnt-personalized-content-nonce', 'nonce' );
+		check_ajax_referer( 'kntnt-cip-nonce', 'nonce' );
 
 		// Get the profile.
 		$profile = $_POST['profile'] ? $_POST['profile'] : [];
@@ -32,7 +32,7 @@ class Ajax_Handler {
 		 * @param array $attr  An associated array with the container element's
 		 *                     attributes.
 		 */
-		echo apply_filters( 'kntnt_personalized_content_output', '', $profile, $_POST['attributes'] );
+		echo apply_filters( 'kntnt_cip_output', '', $profile, $_POST['attributes'] );
 
 		// That's it.
 		wp_die();

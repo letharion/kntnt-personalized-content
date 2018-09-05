@@ -1,6 +1,6 @@
 <?php
 
-namespace Kntnt\Personalized_Content;
+namespace Kntnt\CIP;
 
 require_once Plugin::plugin_dir( 'classes/class-abstract-settings.php' );
 
@@ -10,14 +10,14 @@ class Settings extends Abstract_Settings {
 	 * Returns the settings menu title.
 	 */
 	protected function menu_title() {
-		return __( 'Personalized Content', 'kntnt-personalized-content' );
+		return __( 'KNTNT CIP', 'kntnt-cip' );
 	}
 
 	/**
 	 * Returns the settings page title.
 	 */
 	protected function page_title() {
-		return __( "Kntnt's Personalized Content", 'kntnt-personalized-content' );
+		return __( "Kntnt's Content Intelligence Platform", 'kntnt-cip' );
 	}
 
 	/**
@@ -26,9 +26,9 @@ class Settings extends Abstract_Settings {
 	protected function fields() {
 
 		$fields['cip_url'] = [
-			'type' => 'text',
-			'label' => __( 'CIP URL', 'kntnt-personalized-content' ),
-			'description' => __( 'URL to the front page of Content Intelligence Platform by Kntnt', 'kntnt-personalized-content' ),
+			'type' => 'url',
+			'label' => __( 'CIP URL', 'kntnt-cip' ),
+			'description' => __( 'URL to the front page of Content Intelligence Platform by Kntnt', 'kntnt-cip' ),
 			'validate' => function ( $url ) { return (bool) filter_var( $url, FILTER_VALIDATE_URL ); },
 			'filter-after' => 'trailingslashit',
 		];

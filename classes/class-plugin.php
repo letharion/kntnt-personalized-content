@@ -1,6 +1,6 @@
 <?php
 
-namespace Kntnt\Personalized_Content;
+namespace Kntnt\CIP;
 
 class Plugin {
 
