@@ -31,12 +31,12 @@ before it is [url-encoded](https://en.wikipedia.org/wiki/Percent-encoding):
 
     (function(){document.cookie='kntnt-personalized-content-profile={"strategy_step": ["unaware","doubts"],"strategy_interest": ["business-managers"]};path=/';})();
 
-Following links are the trivial bookmarklets for
-[an unknown user][unknown] (i.e. we haven't enough data to make a profile) and
-for [restoring normal operations][restore].
+Following are bookmarklets for an unknown user] (i.e. we haven't enough data to
+make a profile) and for restoring normal operations before url-encoding:
 
-[unknown]: javascript:%28function%28%29%7Bdocument.cookie%3D%27kntnt-cip-profile%3D%7B%7D%3Bpath%3D%2F%27%3B%7D%29%28%29%3B
-[restore]: javascript:%28function%28%29%7Bdocument.cookie%3D%27kntnt-cip-profile%3D%3Bexpires%3DThu%2C01-Jan-197000%3A00%3A01GMT%3Bpath%3D%2F%27%3B%7D%29%28%29%3B
+    (function(){document.cookie='kntnt-personalized-content-profile=;expires=Thu,01-Jan-197000:00:01GMT;path=/';})();
+
+    (function(){document.cookie='kntnt-personalized-content-profile={};path=/';})();
 
 ## Requirements
 
