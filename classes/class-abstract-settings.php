@@ -1,6 +1,6 @@
 <?php
 
-namespace Kntnt\CIP;
+namespace Kntnt\Personalized_Content;
 
 abstract class Abstract_Settings {
 
