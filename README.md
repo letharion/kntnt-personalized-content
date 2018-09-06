@@ -1,19 +1,18 @@
-# Kntnt's Content Integration Platform
+# Kntnt's Personalized Content
 
-WordPress plugin that integrates WordPress with Kntnt's Content Intelligence
-Platform.
+WordPress plugin that provides hooks that allows developers to inject personalized content.
 
 ## Description
 
 This plugin provides two filter hooks that can be used to replace the content
 of a `<div>`-element with content personalized for each visitor.
 
-The first filter is `kntnt_cip_selector` which filters the
+The first filter is `kntnt_personalized_content_selector` which filters the
 selector that is used by jQuery to find the container(s) that will be replaced
 with the personalized content. This filter has only the selector as argument.
-Default is `.kntnt-cip`. 
+Default is `.kntnt-personalized-content`. 
 
-The second filter is `kntnt_cip_output` which filters the
+The second filter is `kntnt_personalized_content_output` which filters the
 HTML-code of the personalized content before it is echoed back to the calling
 JavaScript. This filter has three argument. The first is the HTML to be
 filtered. Default is an empty string. The second argument is the visitors
@@ -23,7 +22,7 @@ value. The third argument is an associative array of the container element's
 attributes (e.g. id and class).
 
 When WordPress runs in debug mode, i.e. WP_DEBUG is defined and true, the
-plugin looks for the cookie `kntnt-cip-profile`. If it exists
+plugin looks for the cookie `kntnt-personalized-content-profile`. If it exists
 and is non-empty, its value is used as profile instead of fetching it from CIP.
 By creating bookmarklets for various profiles, you can test their effect on
 the personalized content. This is an example how such bookmarklet looks like
@@ -52,27 +51,21 @@ Install the plugin [the usually way](https://codex.wordpress.org/Managing_Plugin
 
 ### Where is the setting page?
 
-Look for `KNTNT CIP` in the Settings menu.
+Look for `Personalized Content` in the Settings menu.
 
 ### How can I get help?
 
-If you have a questions about the plugin, and cannot find an answer here, start
-by looking at [issues](https://github.com/Kntnt/kntnt-cip/issues) and
-[pull requests](https://github.com/Kntnt/kntnt-cip/pulls). If you still cannot
-find the answer, feel free to ask in the the plugin's
-[issue tracker](https://github.com/Kntnt/kntnt-cip/issues) at Github.
+If you have a questions about the plugin, and cannot find an answer here, start by looking at [issues](https://github.com/Kntnt/kntnt-personalized-content/issues) and [pull requests](https://github.com/Kntnt/kntnt-personalized-content/pulls). If you still cannot find the answer, feel free to ask in the the plugin's [issue tracker](https://github.com/Kntnt/kntnt-personalized-content/issues) at Github.
 
 ### How can I report a bug?
 
-If you have found a potential bug, please report it on the plugin's
-[issue tracker](https://github.com/Kntnt/kntnt-cip/issues) at Github.
+If you have found a potential bug, please report it on the plugin's [issue tracker](https://github.com/Kntnt/kntnt-personalized-content/issues) at Github.
 
 ### How can I contribute?
 
 Contributions to the code or documentation are much appreciated.
 
-If you are unfamiliar with Git, please date it as a new issue on the plugin's
-[issue tracker](https://github.com/Kntnt/kntnt-cip/issues) at Github.
+If you are unfamiliar with Git, please date it as a new issue on the plugin's [issue tracker](https://github.com/Kntnt/kntnt-personalized-content/issues) at Github.
 
 If you are familiar with Git, please do a pull request.
 
