@@ -77,10 +77,16 @@ class Plugin {
 		return 'any' == $context ||
 		       'public' == $context && ( ! defined( 'WP_ADMIN' ) || ! WP_ADMIN ) ||
 		       'ajax' == $context && defined( 'DOING_AJAX' ) && DOING_AJAX ||
-		       'admin' == $context && defined( 'WP_ADMIN' ) && WP_ADMIN ||
+		       'admin' == $context && defined( 'WP_ADMIN' ) && WP_ADMIN && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ||
 		       'cron' == $context && defined( 'DOING_CRON' ) && DOING_CRON ||
 		       'cli' == $context && defined( 'WP_CLI' ) && WP_CLI ||
 		       isset( $_SERVER ) && isset( $_SERVER['SCRIPT_FILENAME'] ) && pathinfo( $_SERVER['SCRIPT_FILENAME'], PATHINFO_FILENAME ) == $context;
+	}
+
+	public static function is_debugging() {
+		static $kntnt_debug;
+		if ( ! $kntnt_debug ) $kntnt_debug = strtr( strtoupper( self::$ns ), '-', '_' );
+		return @constant( 'WP_DEBUG' ) && @constant( $kntnt_debug );
 	}
 
 	// Returns an instance of the class with the provided name.
@@ -107,11 +113,22 @@ class Plugin {
 		return isset( $opt[ $key ] ) ? $opt[ $key ] : $default;
 	}
 
-	public static final function str_join( $lhs, $rhs, $separator = '/' ) {
-		if ( $lhs && $rhs ) {
-			$lhs = rtrim( $lhs, $separator ) . $separator . ltrim( $rhs, $separator );
+	public static final function log( $message = '', ...$args ) {
+		if ( self::is_debugging() ) {
+			$caller = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS, 3 );
+			$caller = $caller[1]['class'] . '->' . $caller[1]['function'] . '()';
+			foreach ( $args as &$arg ) {
+				if ( is_array( $arg ) || is_object( $arg ) ) {
+					$arg = print_r( $arg, true );
+				}
+			}
+			$message = sprintf( $message, ...$args );
+			error_log( "$caller: $message" );
 		}
-		return $lhs;
+	}
+
+	public static function str_join( $lhs, $rhs, $sep = '/' ) {
+		return rtrim( $lhs, $sep ) . $sep . ltrim( $rhs, $sep );
 	}
 
 }
