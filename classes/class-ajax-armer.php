@@ -6,8 +6,17 @@ class Ajax_Armer {
 
 	private $ns;
 
+	private $cip_url;
+
 	public function __construct() {
+
 		$this->ns = Plugin::ns();
+
+		add_action( 'kntnt_cip_init', function ( $cip ) {
+			$this->cip_url = $cip->url();
+			Plugin::log( 'CIP URL: %s', $this->cip_url );
+		} );
+
 	}
 
 	public function run() {
@@ -16,9 +25,10 @@ class Ajax_Armer {
 
 	public function enqueue_script() {
 
-		$cip_url = Plugin::option( 'cip_url' );
-
-		if ( ! $cip_url ) return;
+		if ( ! $this->cip_url ) {
+			Plugin::log( "No URL provided by CIP plugin." );
+			return;
+		}
 
 		/**
 		 * Filters the selector that is used by jQuery to find the container(s)
@@ -33,10 +43,12 @@ class Ajax_Armer {
 
 		if ( ! $selector ) return;
 
+		Plugin::log();
+
 		wp_enqueue_script( "{$this->ns}.js", Plugin::rel_plugin_dir( "js/{$this->ns}.js" ), [ 'jquery' ] );
 		wp_localize_script( "{$this->ns}.js", 'kntnt_personalized_content', [
 			'ajax_url' => admin_url( 'admin-ajax.php' ),
-			'cip_url' => $cip_url,
+			'cip_url' => $this->cip_url,
 			'selector' => $selector,
 			'action' => $this->ns,
 			'nonce' => wp_create_nonce( 'kntnt-personalized-content-nonce' ),

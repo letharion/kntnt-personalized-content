@@ -1,6 +1,7 @@
 # Kntnt's Personalized Content
 
-WordPress plugin that provides hooks that allows developers to inject personalized content.
+WordPress plugin that provides hooks that allows developers to inject
+personalized content based on profiles from Kntnt's CIP.
 
 ## Description
 
@@ -46,7 +47,7 @@ CIP is only available for Kntnt's customers.
 ## Installation
 
 Install the plugin [the usually way](https://codex.wordpress.org/Managing_Plugins#Installing_Plugins).
-
+x
 ## Frequently Asked Questions
 
 ### Where is the setting page?
