@@ -100,6 +100,10 @@ abstract class Abstract_Plugin {
 		return new $class_name();
 	}
 
+	static public function template( $file ) {
+		return Plugin::plugin_dir( "includes/$file" );
+	}
+
 	// If $key is left out or empty, e.g. `Plugin::option()`, returns an array
 	// with this plugins all options if existing, otherwise $default.
 	// If $key is included and non-empty, e.g. `Plugin::option('key')`, returns
@@ -107,13 +111,28 @@ abstract class Abstract_Plugin {
 	// otherwise $default.
 	static public function option( $key = '', $default = false ) {
 		$opt = get_option( self::$ns, null );
-		if ( $opt === null ) {
+		if ( null === $opt ) {
 			return $default;
 		}
 		if ( empty( $key ) ) {
 			return $opt;
 		}
 		return isset( $opt[ $key ] ) ? $opt[ $key ] : $default;
+	}
+
+	static public function set_option( $key, $value ) {
+		$opt = get_option( self::$ns, [] );
+		$opt[ $key ] = $value;
+		return update_option( self::$ns, $opt );
+	}
+
+	static public function delete_option( $key ) {
+		$opt = get_option( self::$ns, [] );
+		if ( isset( $opt[ $key ] ) ) {
+			unset( $opt[ $key ] );
+			return update_option( self::$ns, $opt );
+		}
+		return false;
 	}
 
 	public static final function log( $message = '', ...$args ) {
