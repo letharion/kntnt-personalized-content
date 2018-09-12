@@ -32,8 +32,13 @@ let kntntCIP = new class {
         }
     }
 
-    // TODO CLAES: Contact CIP at this.url to load this.profile
     _loadProfile() {
+        const visitorID = Piwik.getTracker().getVisitorId();
+        fetch('/index.php?module=API&method=RecommendedTagAPI.getRecommendations&format=JSON&visitorID=e48f668579a7fab7')
+          .then(response => response.json())
+          .then(tags => {
+            console.log(JSON.stringify(tags));
+        });
         return {
             'strategy_interest': ['business_managers'],
             'strategy_step': ['unaware', 'experiencing'],
